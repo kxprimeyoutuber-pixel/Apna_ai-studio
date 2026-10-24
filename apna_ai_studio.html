@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apna AI Studio</title>
+<style>
+:root{--bg:#0b1020;--panel:#151c31;--text:#f5f7ff;--muted:#aab4d0;--accent:#8b6cff;--line:#2a3554}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(145deg,#0b1020,#15102c);color:var(--text)}
+header{padding:22px 16px;text-align:center;border-bottom:1px solid var(--line)}header h1{margin:0 0 8px;font-size:clamp(26px,5vw,38px)}header p{margin:0;color:var(--muted)}
+main{max-width:900px;margin:24px auto;padding:0 14px}.panel{background:rgba(21,28,49,.96);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+button{border:0;border-radius:10px;padding:12px 10px;background:#293452;color:white;font-weight:700;cursor:pointer}
+button.active,.primary{background:var(--accent)}button:hover{filter:brightness(1.12)}
+label{display:block;margin:14px 0 7px;font-weight:700}input,textarea,select{width:100%;padding:12px;border-radius:10px;border:1px solid #394563;background:#0d1427;color:white;font:inherit}
+textarea{min-height:100px;resize:vertical}.output{white-space:pre-wrap;line-height:1.55;background:#0d1427;border:1px solid var(--line);border-radius:10px;padding:14px;min-height:90px;margin-top:12px}
+.note{color:var(--muted);font-size:14px;line-height:1.5}.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.row button{flex:1;min-width:130px}
+.hidden{display:none}footer{text-align:center;color:var(--muted);padding:12px 18px 28px;font-size:13px}
+</style>
+</head>
+<body>
+<header><h1>✨ Apna AI Studio</h1><p>AI Photo Prompts • Video Prompts • Hindi Scripts</p></header>
+<main>
+  <section class="panel">
+    <h2>आप क्या बनाना चाहते हैं?</h2>
+    <div class="tabs">
+      <button class="active" data-tab="script">📝 स्क्रिप्ट</button>
+      <button data-tab="photo">🖼️ फोटो प्रॉम्प्ट</button>
+      <button data-tab="video">🎬 वीडियो प्रॉम्प्ट</button>
+    </div>
+    <div id="script" class="tool">
+      <label for="topic">कहानी या वीडियो का विषय</label>
+      <input id="topic" placeholder="जैसे: पहाड़ों में एक किसान">
+      <label for="duration">वीडियो की लंबाई</label>
+      <select id="duration"><option>30 सेकंड</option><option>60 सेकंड</option><option>2 मिनट</option><option>5 मिनट</option></select>
+      <label for="style">स्टाइल</label>
+      <select id="style"><option>रोचक और भावनात्मक</option><option>डॉक्यूमेंट्री</option><option>मजेदार</option><option>बच्चों की कहानी</option><option>प्रेरणादायक</option></select>
+      <button class="primary" id="makeScript">स्क्रिप्ट बनाएँ</button>
+      <div id="scriptOut" class="output">आपकी स्क्रिप्ट यहाँ दिखाई देगी।</div>
+      <div class="row"><button class="copy" data-copy="scriptOut">कॉपी करें</button></div>
+      <p class="note">यह शुरुआती संस्करण विषय के आधार पर एक स्क्रिप्ट टेम्पलेट बनाता है। असली AI लेखन जोड़ने के लिए बाद में सुरक्षित AI API जोड़नी होगी।</p>
+    </div>
+    <div id="photo" class="tool hidden">
+      <label for="photoIdea">किस तरह की फोटो चाहिए?</label>
+      <textarea id="photoIdea" placeholder="जैसे: सुबह के समय हिमालय के पहाड़, धुंध और देवदार के पेड़"></textarea>
+      <label for="photoStyle">फोटो स्टाइल</label>
+      <select id="photoStyle"><option>Photorealistic, cinematic</option><option>Cartoon illustration</option><option>3D animation</option><option>Documentary photography</option></select>
+      <button class="primary" id="makePhoto">फोटो प्रॉम्प्ट बनाएँ</button>
+      <div id="photoOut" class="output">आपका फोटो प्रॉम्प्ट यहाँ दिखाई देगा।</div>
+      <div class="row"><button class="copy" data-copy="photoOut">कॉपी करें</button></div>
+      <p class="note">यह प्रॉम्प्ट बनाता है, खुद फोटो नहीं। फोटो बनाने के लिए बाद में किसी AI image API या जनरेटर से कनेक्शन चाहिए।</p>
+    </div>
+    <div id="video" class="tool hidden">
+      <label for="videoIdea">वीडियो में क्या दिखाना है?</label>
+      <textarea id="videoIdea" placeholder="जैसे: कैमरा धीरे-धीरे चीड़ के जंगल से गुजरता है"></textarea>
+      <label for="ratio">वीडियो अनुपात</label>
+      <select id="ratio"><option>16:9 landscape</option><option>9:16 vertical Shorts</option><option>1:1 square</option></select>
+      <button class="primary" id="makeVideo">वीडियो प्रॉम्प्ट बनाएँ</button>
+      <div id="videoOut" class="output">आपका वीडियो प्रॉम्प्ट यहाँ दिखाई देगा।</div>
+      <div class="row"><button class="copy" data-copy="videoOut">कॉपी करें</button></div>
+      <p class="note">यह वीडियो प्रॉम्प्ट बनाता है, वीडियो फ़ाइल नहीं। असली वीडियो जनरेशन के लिए अलग AI सेवा/API चाहिए।</p>
+    </div>
+  </section>
+  <section class="panel">
+    <h3>आगे क्या जोड़ सकते हैं?</h3>
+    <p class="note">1. असली AI स्क्रिप्ट जनरेशन • 2. फोटो जनरेशन API • 3. वीडियो जनरेशन API • 4. यूज़र लॉगिन और सेव किए गए प्रोजेक्ट। API key को कभी भी इस HTML फ़ाइल में सार्वजनिक न रखें; उसे सर्वर पर सुरक्षित रखना चाहिए।</p>
+  </section>
+</main>
+<footer>Apna AI Studio • शुरुआती डेमो • अपना टेक्स्ट डालकर आज़माएँ</footer>
+<script>
+document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===btn));
+  document.querySelectorAll('.tool').forEach(p=>p.classList.toggle('hidden',p.id!==btn.dataset.tab));
+}));
+document.getElementById('makeScript').addEventListener('click',()=>{
+  const topic=document.getElementById('topic').value.trim()||'एक रोचक कहानी';
+  const duration=document.getElementById('duration').value;
+  const style=document.getElementById('style').value;
+  document.getElementById('scriptOut').textContent=
+`शीर्षक: ${topic}\nलंबाई: ${duration}\nस्टाइल: ${style}\n\n[ओपनिंग]\nक्या आपने कभी सोचा है कि ${topic.toLowerCase()} के पीछे कैसी कहानी हो सकती है?\n\n[मुख्य भाग]\nआज हम ${topic} की कहानी जानेंगे। शुरुआत में एक छोटी-सी घटना होती है, जो सब कुछ बदल देती है। आगे बढ़ते हुए किरदार एक चुनौती का सामना करता है और समझदारी से उसका हल खोजता है।\n\n[समापन]\nइस कहानी से हमें सीख मिलती है कि धैर्य और कोशिश बहुत मायने रखते हैं। ऐसी और कहानियों के लिए जुड़े रहें!\n\nनोट: यह शुरुआती टेम्पलेट है; विषय के अनुसार विवरण खुद सुधारें।`;
+});
+document.getElementById('makePhoto').addEventListener('click',()=>{
+  const idea=document.getElementById('photoIdea').value.trim()||'beautiful mountain landscape at sunrise';
+  const style=document.getElementById('photoStyle').value;
+  document.getElementById('photoOut').textContent=`${idea}. Style: ${style}, detailed composition, natural lighting, high detail, professional quality.`;
+});
+document.getElementById('makeVideo').addEventListener('click',()=>{
+  const idea=document.getElementById('videoIdea').value.trim()||'mist moving through a pine forest at sunrise';
+  const ratio=document.getElementById('ratio').value;
+  document.getElementById('videoOut').textContent=`Cinematic video of ${idea}. Slow smooth camera movement, realistic motion, natural lighting, detailed environment, documentary quality, 4K look, ${ratio}.`;
+});
+document.querySelectorAll('.copy').forEach(btn=>btn.addEventListener('click',async()=>{
+  const text=document.getElementById(btn.dataset.copy).textContent;
+  try{await navigator.clipboard.writeText(text);btn.textContent='कॉपी हो गया ✓';setTimeout(()=>btn.textContent='कॉपी करें',1500);}
+  catch(e){alert('टेक्स्ट चुनकर कॉपी करें।');}
+}));
+</script>
+</body>
+</html>
