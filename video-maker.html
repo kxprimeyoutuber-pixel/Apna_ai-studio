@@ -1,36 +1,324 @@
-
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apna AI Studio Video Maker</title>
+<title>Apna AI Studio - Video Maker</title>
 <style>
-body{margin:0;padding:20px;font-family:Arial;background:#10121b;color:white}
+*{box-sizing:border-box}
+body{margin:0;padding:20px;font-family:Arial,sans-serif;background:#10121b;color:white}
 main{max-width:500px;margin:auto}
-textarea,button,select{width:100%;box-sizing:border-box;padding:14px;margin:10px 0;border-radius:10px;font-size:16px}
-textarea{height:140px}
-button{background:#7957ff;color:white;border:0;font-weight:bold}
-video{width:100%}
+h1{text-align:center;color:#a994ff}
+.card{background:#1c2030;padding:16px;border-radius:15px;margin:15px 0}
+textarea,button,select,input{width:100%;padding:13px;margin:9px 0;border-radius:10px;font-size:16px}
+textarea,select,input{background:#292e40;color:white;border:1px solid #424963}
+textarea{height:110px}
+button{background:#7957ff;color:white;border:0;font-weight:bold;cursor:pointer}
+canvas,video{width:100%;margin-top:12px;border-radius:10px;background:#080910}
+.note{font-size:13px;color:#c4c9da;line-height:1.6}
 </style>
 </head>
 <body>
 <main>
 <h1>🎬 Apna AI Studio</h1>
+<div class="card">
 <h2>AI Video Maker</h2>
-<p>अपनी वीडियो का prompt लिखें:</p>
-<textarea id="prompt" placeholder="Describe your video in English..."></textarea>
-<select><option>9:16 - Shorts / Reels</option></select>
-<button onclick="makeVideo()">Generate Video</button>
-<p id="status">अपना prompt लिखें।</p>
-<script>
-function makeVideo(){
- const p=document.getElementById("prompt").value.trim();
- document.getElementById("status").textContent=p
- ? "Prompt तैयार है। असली वीडियो बनाने के लिए AI API कनेक्शन जोड़ना बाकी है।"
- : "पहले अपना prompt लिखें।";
-}
-</script>
+<label>Video Prompt</label>
+<textarea id="prompt" placeholder="Describe your video..."></textarea>
+
+<label>Photo Upload (optional)</label>
+<input id="photo" type="file" accept="image/*">
+
+<label>Video Format</label>
+<select id="ratio">
+<option value="9:16">9:16 - Shorts / Reels</option>
+<option value="16:9">16:9 - YouTube</option>
+<option value="1:1">1:1 - Square</option>
+</select>
+
+<label>Duration</label>
+<select id="duration">
+<option value="5">5 seconds</option>
+<option value="10">10 seconds</option>
+<option value="15">15 seconds</option>
+</select>
+
+<button id="generate" onclick="makeVideo()">🎥 Generate Video</button>
+<p id="status">Prompt likho ya photo upload karo.</p>
+</div>
+
+<div class="card">
+<h3>Video Preview</h3>
+<canvas id="canvas" width="360" height="640"></canvas>
+<video id="preview" controls playsinline hidden></video>
+<a id="download" hidden download="apna-ai-video.webm">
+<button type="button">⬇️ Download Video</button>
+</a>
+</div>
+
+<p class="note">
+Yeh free browser-based animated video maker hai.
+Yeh prompt aur photo se basic animated video banata hai.
+Asli AI-generated scenes ke liye AI model/API jodna hoga.
+</p>
 </main>
+
+<script>
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+const promptBox=document.getElementById("prompt");
+const statusBox=document.getElementById("status");
+const preview=document.getElementById("preview");
+const download=document.getElementById("download");
+const button=document.getElementById("generate");
+
+let photo=null;
+let busy=false;
+let stream=null;
+let recorder=null;
+let chunks=[];
+let videoURL=null;
+let frameID=null;
+
+document.getElementById("photo").addEventListener("change",e=>{
+ const file=e.target.files[0];
+ photo=null;
+ if(!file)return;
+ if(!file.type.startsWith("image/")||file.size>10*1024*1024){
+  statusBox.textContent="Valid photo select karo (maximum 10 MB).";
+  e.target.value="";
+  return;
+ }
+ const url=URL.createObjectURL(file);
+ const img=new Image();
+ img.onload=()=>{
+  photo=img;
+  URL.revokeObjectURL(url);
+  draw(0);
+  statusBox.textContent="Photo ready hai!";
+ };
+ img.onerror=()=>{
+  URL.revokeObjectURL(url);
+  statusBox.textContent="Photo load nahi hui.";
+ };
+ img.src=url;
+});
+
+function setSize(){
+ const ratio=document.getElementById("ratio").value;
+ if(ratio==="16:9"){canvas.width=640;canvas.height=360}
+ else if(ratio==="1:1"){canvas.width=480;canvas.height=480}
+ else{canvas.width=360;canvas.height=640}
+}
+
+function draw(progress){
+ const w=canvas.width,h=canvas.height;
+ ctx.clearRect(0,0,w,h);
+
+ const g=ctx.createLinearGradient(0,0,w,h);
+ g.addColorStop(0,"#24164d");
+ g.addColorStop(1,"#7957ff");
+ ctx.fillStyle=g;
+ ctx.fillRect(0,0,w,h);
+
+ if(photo){
+  const scale=Math.max(w/photo.width,h/photo.height);
+  const zoom=1+progress*.12;
+  const iw=photo.width*scale*zoom;
+  const ih=photo.height*scale*zoom;
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(0,0,w,h);
+  ctx.clip();
+  ctx.drawImage(photo,(w-iw)/2,(h-ih)/2,iw,ih);
+  ctx.fillStyle="rgba(0,0,0,.35)";
+  ctx.fillRect(0,0,w,h);
+  ctx.restore();
+ }
+
+ for(let i=0;i<12;i++){
+  const x=(i*73+progress*45)%w;
+  const y=(i*109+progress*75)%h;
+  ctx.beginPath();
+  ctx.arc(x,y,3+i%3,0,Math.PI*2);
+  ctx.fillStyle="rgba(255,255,255,.5)";
+  ctx.fill();
+ }
+
+ const prompt=promptBox.value.trim();
+ if(prompt){
+  ctx.fillStyle="white";
+  ctx.textAlign="center";
+  ctx.textBaseline="middle";
+  ctx.font="bold "+Math.max(18,w*.065)+"px Arial";
+
+  const words=prompt.split(/\s+/);
+  const lines=[];
+  let line="";
+  const maxWidth=w*.82;
+
+  for(const word of words){
+   const test=line?line+" "+word:word;
+   if(ctx.measureText(test).width>maxWidth&&line){
+    lines.push(line);
+    line=word;
+   }else line=test;
+  }
+  if(line)lines.push(line);
+
+  const lineHeight=Math.max(24,w*.085);
+  const maxLines=Math.max(1,Math.floor(h*.3/lineHeight));
+  const shown=lines.slice(0,maxLines);
+  if(lines.length>maxLines&&shown.length){
+   shown[shown.length-1]+="...";
+  }
+
+  shown.forEach((text,i)=>{
+   const y=h*.78+(i-(shown.length-1)/2)*lineHeight;
+   ctx.lineWidth=4;
+   ctx.strokeStyle="#222";
+   ctx.strokeText(text,w/2,y,maxWidth);
+   ctx.fillText(text,w/2,y,maxWidth);
+  });
+ }
+
+ ctx.textAlign="left";
+ ctx.font="bold 13px Arial";
+ ctx.fillStyle="white";
+ ctx.fillText("APNA AI STUDIO",12,22);
+}
+
+function makeVideo(){
+ if(busy)return;
+
+ if(!promptBox.value.trim()&&!photo){
+  statusBox.textContent="Pehle prompt likho ya photo upload karo.";
+  return;
+ }
+
+ if(!canvas.captureStream||!window.MediaRecorder){
+  statusBox.textContent="Video recording ke liye updated Chrome try karo.";
+  return;
+ }
+
+ const mime=["video/webm;codecs=vp9","video/webm;codecs=vp8","video/webm"]
+  .find(t=>MediaRecorder.isTypeSupported(t));
+
+ if(!mime){
+  statusBox.textContent="Is browser mein video format supported nahi hai.";
+  return;
+ }
+
+ busy=true;
+ button.disabled=true;
+ download.hidden=true;
+ preview.hidden=true;
+
+ if(videoURL){
+  URL.revokeObjectURL(videoURL);
+  videoURL=null;
+ }
+
+ if(frameID)cancelAnimationFrame(frameID);
+ if(stream)stream.getTracks().forEach(t=>t.stop());
+
+ setSize();
+ chunks=[];
+
+ try{
+  stream=canvas.captureStream(30);
+  recorder=new MediaRecorder(stream,{mimeType:mime});
+
+  recorder.ondataavailable=e=>{
+   if(e.data&&e.data.size)chunks.push(e.data);
+  };
+
+  recorder.onerror=()=>{
+   busy=false;
+   button.disabled=false;
+   statusBox.textContent="Recording error. Dobara try karo.";
+  };
+
+  recorder.onstop=()=>{
+   if(stream)stream.getTracks().forEach(t=>t.stop());
+   stream=null;
+   busy=false;
+   button.disabled=false;
+
+   if(!chunks.length){
+    statusBox.textContent="Video nahi ban payi. Dobara try karo.";
+    return;
+   }
+
+   const blob=new Blob(chunks,{type:mime});
+   videoURL=URL.createObjectURL(blob);
+   preview.src=videoURL;
+   preview.hidden=false;
+   download.href=videoURL;
+   download.download="apna-ai-video.webm";
+   download.hidden=false;
+   statusBox.textContent="Video ready! Preview dekho aur download karo.";
+  };
+
+  const duration=Number(document.getElementById("duration").value);
+  const start=performance.now();
+
+  recorder.start(250);
+  statusBox.textContent="Video ban rahi hai...";
+
+  function animate(now){
+   const p=Math.min((now-start)/(duration*1000),1);
+   draw(p);
+
+   if(p<1&&busy){
+    frameID=requestAnimationFrame(animate);
+   }else if(recorder&&recorder.state==="recording"){
+    recorder.stop();
+   }
+  }
+
+  draw(0);
+  frameID=requestAnimationFrame(animate);
+
+ }catch(err){
+  busy=false;
+  button.disabled=false;
+  statusBox.textContent="Error: "+err.message;
+ }
+}
+
+document.getElementById("ratio").addEventListener("change",()=>{
+ if(!busy){setSize();draw(0)}
+});
+
+function resetVideo(){
+ if(recorder&&recorder.state!=="inactive")recorder.stop();
+ if(frameID)cancelAnimationFrame(frameID);
+ if(stream)stream.getTracks().forEach(t=>t.stop());
+ stream=null;
+ busy=false;
+ button.disabled=false;
+
+ if(videoURL)URL.revokeObjectURL(videoURL);
+ videoURL=null;
+
+ preview.pause();
+ preview.removeAttribute("src");
+ preview.load();
+ preview.hidden=true;
+ download.removeAttribute("href");
+ download.hidden=true;
+
+ promptBox.value="";
+ document.getElementById("photo").value="";
+ photo=null;
+ setSize();
+ draw(0);
+ statusBox.textContent="Ready! Naya video banao.";
+}
+
+setSize();
+draw(0);
+</script>
 </body>
 </html>
