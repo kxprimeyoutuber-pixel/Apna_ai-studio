@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apna AI Studio Video Maker</title>
+<style>
+body{margin:0;padding:20px;font-family:Arial;background:#10121b;color:white}
+main{max-width:500px;margin:auto}
+textarea,button,select{width:100%;box-sizing:border-box;padding:14px;margin:10px 0;border-radius:10px;font-size:16px}
+textarea{height:140px}
+button{background:#7957ff;color:white;border:0;font-weight:bold}
+video{width:100%}
+</style>
+</head>
+<body>
+<main>
+<h1>🎬 Apna AI Studio</h1>
+<h2>AI Video Maker</h2>
+<p>अपनी वीडियो का prompt लिखें:</p>
+<textarea id="prompt" placeholder="Describe your video in English..."></textarea>
+<select><option>9:16 - Shorts / Reels</option></select>
+<button onclick="makeVideo()">Generate Video</button>
+<p id="status">अपना prompt लिखें।</p>
+<script>
+function makeVideo(){
+ const p=document.getElementById("prompt").value.trim();
+ document.getElementById("status").textContent=p
+ ? "Prompt तैयार है। असली वीडियो बनाने के लिए AI API कनेक्शन जोड़ना बाकी है।"
+ : "पहले अपना prompt लिखें।";
+}
+</script>
+</main>
+</body>
+</html>
