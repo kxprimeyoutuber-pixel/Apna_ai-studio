@@ -9,7 +9,7 @@
 *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(145deg,#0b1020,#15102c);color:var(--text)}
 header{padding:22px 16px;text-align:center;border-bottom:1px solid var(--line)}header h1{margin:0 0 8px;font-size:clamp(26px,5vw,38px)}header p{margin:0;color:var(--muted)}
 main{max-width:900px;margin:24px auto;padding:0 14px}.panel{background:rgba(21,28,49,.96);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px}
-.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:16px}
 button{border:0;border-radius:10px;padding:12px 10px;background:#293452;color:white;font-weight:700;cursor:pointer}
 button.active,.primary{background:var(--accent)}button:hover{filter:brightness(1.12)}
 label{display:block;margin:14px 0 7px;font-weight:700}input,textarea,select{width:100%;padding:12px;border-radius:10px;border:1px solid #394563;background:#0d1427;color:white;font:inherit}
@@ -27,6 +27,7 @@ textarea{min-height:100px;resize:vertical}.output{white-space:pre-wrap;line-heig
       <button class="active" data-tab="script">📝 स्क्रिप्ट</button>
       <button data-tab="photo">🖼️ फोटो प्रॉम्प्ट</button>
       <button data-tab="video">🎬 वीडियो प्रॉम्प्ट</button>
+      <button data-tab="maker">🎞️ वीडियो बनाएँ</button>
     </div>
     <div id="script" class="tool">
       <label for="topic">कहानी या वीडियो का विषय</label>
@@ -59,6 +60,12 @@ textarea{min-height:100px;resize:vertical}.output{white-space:pre-wrap;line-heig
       <div id="videoOut" class="output">आपका वीडियो प्रॉम्प्ट यहाँ दिखाई देगा।</div>
       <div class="row"><button class="copy" data-copy="videoOut">कॉपी करें</button></div>
       <p class="note">यह वीडियो प्रॉम्प्ट बनाता है, वीडियो फ़ाइल नहीं। असली वीडियो जनरेशन के लिए अलग AI सेवा/API चाहिए।</p>
+    </div>
+    <div id="maker" class="tool hidden">
+      <h3>🎞️ Video Maker</h3>
+      <p class="note">इसी पेज पर वीडियो मेकर इस्तेमाल करें। अभी यह बेसिक ब्राउज़र एनिमेशन बनाता है, असली AI 3D वीडियो नहीं।</p>
+      <iframe src="video-maker.html" title="Apna AI Studio Video Maker" loading="lazy" style="width:100%;height:1250px;border:0;border-radius:12px;background:#10121b" allow="fullscreen"></iframe>
+      <p><a href="video-maker.html" target="_blank" rel="noopener" style="color:#b9aaff">वीडियो मेकर अलग टैब में खोलें</a></p>
     </div>
   </section>
   <section class="panel">
