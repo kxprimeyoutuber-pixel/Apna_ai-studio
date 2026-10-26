@@ -52,11 +52,14 @@ label{display:block;margin-top:13px;font-weight:700;font-size:14px}
 </select>
 
 <label>Duration</label>
-<select id="duration">
+<select id="duration" aria-label="Choose video duration">
 <option value="5">5 seconds</option>
 <option value="10">10 seconds</option>
 <option value="15">15 seconds</option>
+<option value="30">30 seconds</option>
+<option value="60">60 seconds</option>
 </select>
+<p class="note">Apni video ki length 5, 10, 15, 30 ya 60 seconds mein choose karo. Lambi video banne mein zyada waqt lag sakta hai.</p>
 
 <button id="generate" onclick="makeVideo()">🎥 Generate Video</button>
 <p id="status">Prompt likho ya photo upload karo.</p>
