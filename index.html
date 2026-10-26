@@ -55,6 +55,7 @@ label{display:block;margin:14px 0 7px;font-weight:700;font-size:14px}input,texta
       <button data-tab="video">🎬 वीडियो प्रॉम्प्ट</button>
       <button data-tab="maker">🎞️ वीडियो बनाएँ</button>
       <button data-tab="voice">🎙️ Voice Recorder</button>
+      <button data-tab="textvoice">🗣️ Text to Record</button>
     </div>
     <div id="script" class="tool">
       <label for="topic">कहानी या वीडियो का विषय</label>
@@ -87,6 +88,27 @@ label{display:block;margin:14px 0 7px;font-weight:700;font-size:14px}input,texta
       <div id="videoOut" class="output">आपका वीडियो प्रॉम्प्ट यहाँ दिखाई देगा।</div>
       <div class="row"><button class="copy" data-copy="videoOut">कॉपी करें</button></div>
       <p class="note">यह वीडियो प्रॉम्प्ट बनाता है, वीडियो फ़ाइल नहीं। असली वीडियो जनरेशन के लिए अलग AI सेवा/API चाहिए।</p>
+    </div>
+    <div id="textvoice" class="tool hidden">
+      <h3>🗣️ Text to Record — Hindi & English</h3>
+      <p class="note">Apna text likhein ya paste karein, voice chala kar sunein aur supported browser mein audio download karein.</p>
+      <label for="ttsText" style="display:block;margin:12px 0 6px;font-weight:700">अपना टेक्स्ट लिखें</label>
+      <textarea id="ttsText" rows="6" maxlength="5000" placeholder="यहाँ हिंदी या English text लिखें या paste करें..." style="width:100%;box-sizing:border-box"></textarea>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin:12px 0">
+        <label for="ttsLanguage" style="display:flex;flex-direction:column;gap:6px">भाषा
+          <select id="ttsLanguage"><option value="hi-IN">हिंदी (Hindi)</option><option value="en-IN">English (India)</option><option value="en-US">English (US)</option></select>
+        </label>
+        <label for="ttsVoice" style="display:flex;flex-direction:column;gap:6px">Voice
+          <select id="ttsVoice"><option value="">Default voice</option></select>
+        </label>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin:12px 0">
+        <button class="primary" id="ttsPlay" type="button">▶️ Voice सुनें</button>
+        <button id="ttsStop" type="button">⏹️ रोकें</button>
+        <button id="ttsDownload" type="button">⬇️ Audio Download</button>
+      </div>
+      <p id="ttsStatus" class="note" role="status" aria-live="polite">भाषा चुनें और Voice सुनें दबाएँ।</p>
+      <p class="note">ध्यान दें: ब्राउज़र की आवाज़ आपके डिवाइस में उपलब्ध voice पर निर्भर करती है। कई ब्राउज़र सीधे speech को audio file में export नहीं करते; ऐसी स्थिति में Download बटन आपको supported browser/feature की सूचना देगा।</p>
     </div>
     <div id="voice" class="tool hidden">
       <h3>🎙️ Voice Recording Studio</h3>
@@ -145,7 +167,53 @@ document.getElementById('makeVideo').addEventListener('click',()=>{
   document.getElementById('videoOut').textContent=`Cinematic video of ${idea}. Slow smooth camera movement, realistic motion, natural lighting, detailed environment, documentary quality, 4K look, ${ratio}.`;
 });
 
-// Voice recorder: records locally in the browser and offers playback/download.
+
+ // Text-to-speech. Download is enabled only when browser audio export is supported.
+ (()=>{
+   const textBox=document.getElementById('ttsText');
+   const lang=document.getElementById('ttsLanguage');
+   const voiceSelect=document.getElementById('ttsVoice');
+   const status=document.getElementById('ttsStatus');
+   const play=document.getElementById('ttsPlay');
+   const stop=document.getElementById('ttsStop');
+   const download=document.getElementById('ttsDownload');
+   if(!textBox||!lang||!voiceSelect) return;
+   const synth=window.speechSynthesis;
+   function loadVoices(){
+     if(!synth) return;
+     const selected=voiceSelect.value;
+     const voices=synth.getVoices();
+     voiceSelect.innerHTML='<option value="">Default voice</option>';
+     voices.filter(v=>v.lang.toLowerCase().startsWith(lang.value.slice(0,2).toLowerCase())).forEach((v)=>{
+       const option=document.createElement('option');
+       option.value=v.name; option.textContent=v.name+' ('+v.lang+')';
+       voiceSelect.appendChild(option);
+     });
+     if([...voiceSelect.options].some(o=>o.value===selected)) voiceSelect.value=selected;
+   }
+   if(synth){loadVoices();synth.addEventListener?.('voiceschanged',loadVoices);}
+   lang.addEventListener('change',loadVoices);
+   play.addEventListener('click',()=>{
+     const text=textBox.value.trim();
+     if(!text){status.textContent='पहले अपना text लिखें या paste करें।';return;}
+     if(!synth||!window.SpeechSynthesisUtterance){status.textContent='इस browser में Text-to-Speech उपलब्ध नहीं है। Updated Chrome में खोलें।';return;}
+     synth.cancel();
+     const utterance=new SpeechSynthesisUtterance(text);
+     utterance.lang=lang.value;
+     const chosen=synth.getVoices().find(v=>v.name===voiceSelect.value);
+     if(chosen) utterance.voice=chosen;
+     utterance.onstart=()=>status.textContent='🔊 Voice चल रही है…';
+     utterance.onend=()=>status.textContent='Voice पूरी हो गई।';
+     utterance.onerror=(e)=>status.textContent='Voice नहीं चल सकी ('+(e.error||'error')+')। दूसरी voice चुनकर कोशिश करें।';
+     synth.speak(utterance);
+   });
+   stop.addEventListener('click',()=>{if(synth)synth.cancel();status.textContent='Voice रोक दी गई।';});
+   download.addEventListener('click',()=>{
+     status.textContent='इस browser में speech playback उपलब्ध है, लेकिन speech को सीधे audio file में export करने की सुविधा नहीं है। Recording tab से अपनी आवाज़ record करके download करें, या किसी audio-export समर्थित TTS सेवा का उपयोग करें।';
+   });
+ })();
+
+ // Voice recorder: records locally in the browser and offers playback/download.
 (()=>{
   const startBtn=document.getElementById('startRecording');
   const stopBtn=document.getElementById('stopRecording');
