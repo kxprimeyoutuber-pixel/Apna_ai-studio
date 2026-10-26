@@ -18,24 +18,37 @@
 <meta name="twitter:title" content="Apna AI Studio – AI Tools in Hindi">
 <meta name="twitter:description" content="AI scripts, photo prompts, video prompts aur image-to-video maker try karein.">
 <style>
-:root{--bg:#0b1020;--panel:#151c31;--text:#f5f7ff;--muted:#aab4d0;--accent:#8b6cff;--line:#2a3554}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(145deg,#0b1020,#15102c);color:var(--text)}
-header{padding:22px 16px;text-align:center;border-bottom:1px solid var(--line)}header h1{margin:0 0 8px;font-size:clamp(26px,5vw,38px)}header p{margin:0;color:var(--muted)}
-main{max-width:900px;margin:24px auto;padding:0 14px}.panel{background:rgba(21,28,49,.96);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px}
-.tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:16px}
-button{border:0;border-radius:10px;padding:12px 10px;background:#293452;color:white;font-weight:700;cursor:pointer}
-button.active,.primary{background:var(--accent)}button:hover{filter:brightness(1.12)}
-label{display:block;margin:14px 0 7px;font-weight:700}input,textarea,select{width:100%;padding:12px;border-radius:10px;border:1px solid #394563;background:#0d1427;color:white;font:inherit}
-textarea{min-height:100px;resize:vertical}.output{white-space:pre-wrap;line-height:1.55;background:#0d1427;border:1px solid var(--line);border-radius:10px;padding:14px;min-height:90px;margin-top:12px}
-.note{color:var(--muted);font-size:14px;line-height:1.5}.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.row button{flex:1;min-width:130px}
-.hidden{display:none}footer{text-align:center;color:var(--muted);padding:12px 18px 28px;font-size:13px}
+:root{--bg:#080b18;--panel:#11182b;--text:#f6f7ff;--muted:#aab4d0;--accent:#9a7bff;--line:rgba(174,157,255,.2);--cyan:#73e4e2}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:radial-gradient(ellipse at 12% 0%,rgba(111,73,220,.22),transparent 36%),radial-gradient(ellipse at 95% 18%,rgba(48,178,190,.1),transparent 28%),#080b18;color:var(--text);line-height:1.6}
+header{padding:18px 20px 24px;text-align:left;border-bottom:1px solid var(--line);background:rgba(8,11,24,.75)}header h1{margin:0 0 4px;font-size:clamp(26px,5vw,38px);letter-spacing:-1px}header p{margin:0;color:var(--muted)}
+main{max-width:1080px;margin:0 auto;padding:24px 18px 38px}.hero{position:relative;overflow:hidden;padding:clamp(24px,5vw,52px);margin:18px 0 26px;border:1px solid rgba(174,157,255,.28);border-radius:28px;background:linear-gradient(125deg,rgba(34,34,73,.95),rgba(15,26,46,.94) 65%,rgba(17,54,67,.7));box-shadow:0 24px 80px rgba(0,0,0,.22)}.hero:after{content:"";position:absolute;width:230px;height:230px;border-radius:50%;right:-75px;top:-100px;background:rgba(154,123,255,.18);filter:blur(2px);pointer-events:none}.eyebrow{display:inline-flex;gap:8px;align-items:center;padding:6px 11px;border:1px solid rgba(115,228,226,.3);border-radius:999px;color:#b5fbf5;background:rgba(115,228,226,.07);font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.hero h2{max-width:720px;margin:18px 0 12px;font-size:clamp(30px,6vw,52px);line-height:1.12;letter-spacing:-1.5px}.hero p{max-width:650px;color:#c0c8df;font-size:clamp(15px,2.5vw,18px);margin:0 0 22px}.hero-actions{display:flex;gap:10px;flex-wrap:wrap}.hero-actions a{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;padding:12px 18px;border-radius:12px;font-weight:800}.hero-primary{background:linear-gradient(135deg,#a58bff,#7957f7);color:white;box-shadow:0 8px 28px rgba(121,87,247,.25)}.hero-secondary{border:1px solid rgba(255,255,255,.18);color:#f4f5ff;background:rgba(255,255,255,.04)}.feature-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 26px}.feature{padding:15px;border:1px solid var(--line);border-radius:16px;background:rgba(17,24,43,.7)}.feature strong{display:block;font-size:14px}.feature span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+.panel{background:linear-gradient(145deg,rgba(17,24,43,.96),rgba(14,20,37,.96));border:1px solid var(--line);border-radius:22px;padding:clamp(16px,3vw,26px);margin-bottom:18px;box-shadow:0 12px 36px rgba(0,0,0,.12)}.panel h2,.panel h3{letter-spacing:-.4px}.tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-bottom:20px}.tabs button{min-height:48px}
+button{border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:12px 14px;background:#222d48;color:white;font-weight:750;cursor:pointer;transition:transform .18s ease,filter .18s ease,background .18s ease}button.active,.primary{background:linear-gradient(135deg,#a18aff,#7657f3);border-color:transparent;box-shadow:0 6px 18px rgba(121,87,247,.18)}button:hover{filter:brightness(1.12);transform:translateY(-1px)}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+label{display:block;margin:14px 0 7px;font-weight:700;font-size:14px}input,textarea,select{width:100%;padding:13px;border-radius:12px;border:1px solid #34415f;background:#0b1122;color:white;font:inherit}input:focus,textarea:focus,select:focus{border-color:#9a7bff;outline:none;box-shadow:0 0 0 3px rgba(154,123,255,.12)}textarea{min-height:100px;resize:vertical}.output{white-space:pre-wrap;line-height:1.65;background:#0a1020;border:1px solid var(--line);border-radius:13px;padding:15px;min-height:90px;margin-top:12px;overflow-wrap:anywhere}
+.note{color:var(--muted);font-size:13px;line-height:1.65}.row{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.row button{flex:1;min-width:130px}
+.hidden{display:none}footer{text-align:center;color:var(--muted);padding:22px 18px 34px;font-size:13px;border-top:1px solid var(--line)}footer strong{color:#e5e0ff}
+@media(min-width:760px){header{padding:22px max(24px,calc((100vw - 1040px)/2))}main{padding-top:30px}.tabs{grid-template-columns:repeat(4,minmax(0,1fr))}.feature-strip{gap:16px}}
+@media(max-width:520px){main{padding:14px 12px 28px}.hero{border-radius:20px;margin-top:10px}.feature-strip{grid-template-columns:1fr;gap:8px}.feature{padding:12px 14px}.panel{border-radius:18px}.hero-actions a{width:100%}}
 </style>
 </head>
 <body>
-<header><h1>✨ Apna AI Studio</h1><p>AI Photo Prompts • Video Prompts • Hindi Scripts</p></header>
+<header><h1>✨ Apna AI Studio</h1><p>AI tools for creators · Simple, useful aur Hindi-friendly</p></header>
 <main>
-  <section class="panel">
-    <h2>आप क्या बनाना चाहते हैं?</h2>
+  <section class="hero" aria-labelledby="hero-title">
+    <span class="eyebrow">✦ Creator Toolkit · Hindi + English</span>
+    <h2 id="hero-title">Apne ideas ko <span style="color:#b7a4ff">creative content</span> mein badlo.</h2>
+    <p>Hindi scripts, cinematic photo prompts, video prompts aur video-making tools — creators ke liye ek hi jagah. Apna idea likho aur shuru karo.</p>
+    <div class="hero-actions"><a class="hero-primary" href="#creator-tools">🚀 Tools try karo</a><a class="hero-secondary" href="#how-it-works">Kaise kaam karta hai?</a></div>
+  </section>
+  <section class="feature-strip" aria-label="Studio features">
+    <div class="feature"><strong>✍️ Hindi-friendly</strong><span>Ideas aur prompts ko aasani se taiyaar karein</span></div>
+    <div class="feature"><strong>🎬 Creator-ready</strong><span>Shorts, Reels aur YouTube workflows ke liye</span></div>
+    <div class="feature"><strong>📱 Mobile-first</strong><span>Phone par bhi simple aur responsive layout</span></div>
+  </section>
+  <section class="panel" id="creator-tools">
+    <span class="eyebrow">Your workspace</span>
+    <h2>आज क्या बनाना है?</h2>
+    <p class="note">नीचे एक टूल चुनें, अपना आइडिया लिखें और आउटपुट कॉपी करें।</p>
     <div class="tabs">
       <button class="active" data-tab="script">📝 स्क्रिप्ट</button>
       <button data-tab="photo">🖼️ फोटो प्रॉम्प्ट</button>
@@ -86,12 +99,15 @@ textarea{min-height:100px;resize:vertical}.output{white-space:pre-wrap;line-heig
       <p class="note">Neeche wala maker browser animation banata hai; asli AI video ke liye upar wala tool try karo.</p>
       <iframe src="video-maker.html" title="Basic Video Maker" loading="lazy" style="width:100%;height:1250px;border:0;border-radius:12px;background:#10121b" allow="fullscreen"></iframe>
     </div> </section>
-  <section class="panel">
+  <section class="panel" id="how-it-works">
+    <span class="eyebrow">Getting started</span>
+    <h3>Apna AI Studio कैसे इस्तेमाल करें?</h3>
+    <p>1. ऊपर से स्क्रिप्ट, फोटो प्रॉम्प्ट या वीडियो प्रॉम्प्ट चुनें। 2. अपना आइडिया लिखें। 3. आउटपुट बनाकर कॉपी करें। वीडियो बनाने के लिए Video Maker टैब खोलें।</p>
     <h3>आगे क्या जोड़ सकते हैं?</h3>
     <p class="note">1. असली AI स्क्रिप्ट जनरेशन • 2. फोटो जनरेशन API • 3. वीडियो जनरेशन API • 4. यूज़र लॉगिन और सेव किए गए प्रोजेक्ट। API key को कभी भी इस HTML फ़ाइल में सार्वजनिक न रखें; उसे सर्वर पर सुरक्षित रखना चाहिए।</p>
   </section>
 </main>
-<footer>Apna AI Studio • शुरुआती डेमो • अपना टेक्स्ट डालकर आज़माएँ</footer>
+<footer><strong>✨ Apna AI Studio</strong><br>Built for creators · Hindi-friendly creative tools<br><span>Note: कुछ टूल अभी शुरुआती टेम्पलेट या बाहरी बीटा सेवा पर आधारित हैं।</span></footer>
 <script>
 document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>{
   document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===btn));
