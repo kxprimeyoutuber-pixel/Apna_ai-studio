@@ -54,6 +54,7 @@ label{display:block;margin:14px 0 7px;font-weight:700;font-size:14px}input,texta
       <button data-tab="photo">🖼️ फोटो प्रॉम्प्ट</button>
       <button data-tab="video">🎬 वीडियो प्रॉम्प्ट</button>
       <button data-tab="maker">🎞️ वीडियो बनाएँ</button>
+      <button data-tab="voice">🎙️ Voice Recorder</button>
     </div>
     <div id="script" class="tool">
       <label for="topic">कहानी या वीडियो का विषय</label>
@@ -86,6 +87,18 @@ label{display:block;margin:14px 0 7px;font-weight:700;font-size:14px}input,texta
       <div id="videoOut" class="output">आपका वीडियो प्रॉम्प्ट यहाँ दिखाई देगा।</div>
       <div class="row"><button class="copy" data-copy="videoOut">कॉपी करें</button></div>
       <p class="note">यह वीडियो प्रॉम्प्ट बनाता है, वीडियो फ़ाइल नहीं। असली वीडियो जनरेशन के लिए अलग AI सेवा/API चाहिए।</p>
+    </div>
+    <div id="voice" class="tool hidden">
+      <h3>🎙️ Voice Recording Studio</h3>
+      <p class="note">Apni awaaz record karein, recording sunen aur audio file download karein. Microphone permission allow karni hogi.</p>
+      <div class="voice-controls" style="display:flex;gap:10px;flex-wrap:wrap;margin:16px 0">
+        <button class="primary" id="startRecording" type="button">🔴 Recording शुरू करें</button>
+        <button id="stopRecording" type="button" disabled>⏹️ Recording रोकें</button>
+      </div>
+      <p id="recordingStatus" class="note" role="status" aria-live="polite">अभी रिकॉर्डिंग शुरू नहीं हुई है।</p>
+      <audio id="voicePlayback" controls class="hidden" style="width:100%;margin:12px 0"></audio>
+      <a id="downloadRecording" class="hero-primary hidden" style="display:inline-flex;text-decoration:none;padding:12px 16px;border-radius:12px;font-weight:800;margin-top:8px" download="apna-ai-studio-voice.webm">⬇️ Recording Download करें</a>
+      <p class="note">Privacy: रिकॉर्डिंग आपके ब्राउज़र में बनती है; इस सुविधा में ऑडियो हमारी वेबसाइट के सर्वर पर अपलोड नहीं होता। मोबाइल पर अनुमति माँगे तो Microphone को Allow करें।</p>
     </div>
     <div id="maker" class="tool hidden">
       <h3>🎞️ All-in-One Video Maker</h3>
@@ -131,6 +144,59 @@ document.getElementById('makeVideo').addEventListener('click',()=>{
   const ratio=document.getElementById('ratio').value;
   document.getElementById('videoOut').textContent=`Cinematic video of ${idea}. Slow smooth camera movement, realistic motion, natural lighting, detailed environment, documentary quality, 4K look, ${ratio}.`;
 });
+
+// Voice recorder: records locally in the browser and offers playback/download.
+(()=>{
+  const startBtn=document.getElementById('startRecording');
+  const stopBtn=document.getElementById('stopRecording');
+  const status=document.getElementById('recordingStatus');
+  const playback=document.getElementById('voicePlayback');
+  const download=document.getElementById('downloadRecording');
+  let recorder=null, stream=null, chunks=[], audioUrl=null;
+  startBtn.addEventListener('click',async()=>{
+    if(!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder){
+      status.textContent='यह ब्राउज़र रिकॉर्डिंग सपोर्ट नहीं करता। कृपया अपडेटेड Chrome में HTTPS वेबसाइट खोलें।';
+      return;
+    }
+    try{
+      stream=await navigator.mediaDevices.getUserMedia({audio:true});
+      const mimeType=['audio/webm;codecs=opus','audio/webm','audio/mp4'].find(type=>MediaRecorder.isTypeSupported(type));
+      recorder=mimeType?new MediaRecorder(stream,{mimeType}):new MediaRecorder(stream);
+      chunks=[];
+      recorder.ondataavailable=e=>{if(e.data && e.data.size) chunks.push(e.data);};
+      recorder.onstop=()=>{
+        const blob=new Blob(chunks,{type:recorder.mimeType||'audio/webm'});
+        if(audioUrl) URL.revokeObjectURL(audioUrl);
+        audioUrl=URL.createObjectURL(blob);
+        playback.src=audioUrl;
+        playback.classList.remove('hidden');
+        download.href=audioUrl;
+        const ext=(recorder.mimeType||'').includes('mp4')?'m4a':'webm';
+        download.download='apna-ai-studio-voice.'+ext;
+        download.classList.remove('hidden');
+        status.textContent='रिकॉर्डिंग तैयार है। सुनें या Download करें।';
+        if(stream) stream.getTracks().forEach(track=>track.stop());
+        stream=null;
+      };
+      recorder.start();
+      startBtn.disabled=true;
+      stopBtn.disabled=false;
+      playback.classList.add('hidden');
+      download.classList.add('hidden');
+      status.textContent='🔴 रिकॉर्डिंग चल रही है… अपनी बात बोलें।';
+    }catch(err){
+      status.textContent=err && err.name==='NotAllowedError'
+        ?'माइक्रोफ़ोन की अनुमति नहीं मिली। Browser settings में Microphone Allow करें और फिर कोशिश करें।'
+        :'रिकॉर्डिंग शुरू नहीं हो सकी। माइक्रोफ़ोन जाँचकर दोबारा कोशिश करें।';
+    }
+  });
+  stopBtn.addEventListener('click',()=>{
+    if(recorder && recorder.state!=='inactive') recorder.stop();
+    startBtn.disabled=false;
+    stopBtn.disabled=true;
+  });
+})();
+
 document.querySelectorAll('.copy').forEach(btn=>btn.addEventListener('click',async()=>{
   const text=document.getElementById(btn.dataset.copy).textContent;
   try{await navigator.clipboard.writeText(text);btn.textContent='कॉपी हो गया ✓';setTimeout(()=>btn.textContent='कॉपी करें',1500);}
