@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Photo Maker | Apna AI Studio</title>
+<meta name="description" content="Apna AI Studio par Hindi mein photo prompt taiyaar karein, image generator kholen aur apni image download karein.">
+<link rel="canonical" href="https://kxprimeyoutuber-pixel.github.io/Apna_ai-studio/photo-maker.html">
+<style>
+:root{color-scheme:dark;--bg:#140609;--panel:#291016;--text:#fff4f5;--muted:#e0bfc5;--accent:#ff5266;--line:#65303b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 10% 0%,#42101c,transparent 45%),var(--bg);color:var(--text);font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:850px;margin:auto;padding:22px 15px 40px}a{color:#ff9aa8}.panel{padding:clamp(17px,4vw,28px);border:1px solid var(--line);border-radius:20px;background:rgba(41,16,22,.95);margin:16px 0}h1{font-size:clamp(28px,6vw,42px);line-height:1.2;margin:.4em 0}h2{font-size:22px}label{display:block;font-weight:700;margin:14px 0 6px}textarea,select,input{width:100%;padding:13px;border-radius:11px;border:1px solid #79404a;background:#16090d;color:white;font:inherit}textarea{min-height:120px;resize:vertical}button,.button{display:inline-flex;justify-content:center;align-items:center;text-align:center;border:0;border-radius:12px;padding:12px 16px;background:linear-gradient(135deg,#ff5266,#d91632);color:white;font-weight:800;text-decoration:none;cursor:pointer;min-height:46px}.secondary{background:#44202a;border:1px solid #79404a}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.actions>*{flex:1 1 180px}.output{white-space:pre-wrap;overflow-wrap:anywhere;background:#170a0e;border:1px solid var(--line);border-radius:12px;padding:15px;min-height:90px}.note{color:var(--muted);font-size:14px}details{padding:10px 0;border-bottom:1px solid var(--line)}footer{text-align:center;color:var(--muted);padding:20px}
+</style>
+</head>
+<body><main>
+<p><a href="./">← Apna AI Studio home</a></p>
+<section class="panel">
+<span class="note">FREE PROMPT BUILDER · Hindi + English</span>
+<h1>🖼️ Photo Maker</h1>
+<p>Apni photo ka idea likho, style aur size chuno, prompt banao, phir free image generator kholkar image banane ki koshish karo. Image generator sign-in ya usage limits maang sakta hai.</p>
+<label for="idea">Kaisi photo chahiye?</label>
+<textarea id="idea" placeholder="Jaise: baarish mein akela ladka, raat ki sadak, sad cinematic mood..."></textarea>
+<label for="style">Photo style</label>
+<select id="style"><option>Photorealistic, cinematic</option><option>Anime illustration</option><option>Digital art</option><option>Professional portrait photography</option><option>Fantasy concept art</option><option>Minimal product photography</option><option>3D cartoon render</option></select>
+<label for="ratio">Photo size / aspect ratio</label>
+<select id="ratio"><option value="16:9 landscape">16:9 landscape (YouTube thumbnail / long video)</option><option value="9:16 vertical">9:16 vertical (Shorts / Reels)</option><option value="1:1 square">1:1 square (profile / post)</option><option value="4:5 portrait">4:5 portrait</option></select>
+<div class="actions"><button id="generate">Prompt Generate karo</button><button id="clear" class="secondary" type="button">Clear</button></div>
+<h2>Generated prompt</h2><div class="output" id="output" aria-live="polite">Tumhara prompt yahan aayega.</div>
+<div class="actions"><button id="copy" class="secondary" type="button">Prompt Copy karo</button><a class="button" id="openGenerator" href="https://www.bing.com/images/create" target="_blank" rel="noopener noreferrer">Image Generator kholo ↗</a></div>
+<p class="note">Kaise use karein: (1) Prompt Generate karo dabao. (2) Prompt Copy karo. (3) Image Generator kholo aur prompt paste karke Create/Generate dabao. (4) Jo image pasand aaye, us image generator ke Download button se phone mein save karo. Generator ki apni terms aur limits lagu hongi.</p>
+</section>
+<section class="panel"><h2>Photo prompt ke tips</h2>
+<ul><li>Subject aur action clearly likho.</li><li>Background, lighting aur mood specify karo.</li><li>Thumbnail ke liye 16:9 aur Shorts ke liye 9:16 chuno.</li><li>Image mein text sahi aane ki guarantee nahi hoti; title baad mein editor mein add kar sakte ho.</li></ul>
+<details><summary>Kya image isi website ke andar generate hoti hai?</summary><p>Nahi. Yeh free page prompt banata hai aur external image generator kholta hai. Asli image external service par banti hai; uski login, free limits aur download options us service par depend karte hain.</p></details>
+<details><summary>Kya bilkul free hai?</summary><p>Is prompt builder ko use karne ke liye payment nahi hai. External image service free limits, sign-in ya paid options rakh sakti hai. Payment details enter karne se pehle uski conditions padh lena.</p></details>
+</section>
+<footer>Apna AI Studio · <a href="about.html">About</a> · <a href="privacy-policy.html">Privacy Policy</a> · <a href="contact.html">Contact</a></footer>
+</main>
+<script>
+const idea=document.getElementById('idea'),style=document.getElementById('style'),ratio=document.getElementById('ratio'),output=document.getElementById('output');
+document.getElementById('generate').addEventListener('click',()=>{const subject=idea.value.trim();if(!subject){output.textContent='Pehle batao kaisi photo chahiye.';idea.focus();return;}output.textContent=subject+'. Style: '+style.value+', detailed composition, high detail, suitable lighting, clear subject, '+ratio.value+' composition. Avoid logos, watermarks, and unwanted text.';});
+document.getElementById('clear').addEventListener('click',()=>{idea.value='';output.textContent='Tumhara prompt yahan aayega.';});
+document.getElementById('copy').addEventListener('click',async()=>{const text=output.textContent;if(text==='Tumhara prompt yahan aayega.'||text==='Pehle batao kaisi photo chahiye.'){output.textContent='Pehle prompt generate karo.';return;}try{await navigator.clipboard.writeText(text);document.getElementById('copy').textContent='Copy ho gaya ✓';}catch(e){const r=document.createRange();r.selectNodeContents(output);const s=window.getSelection();s.removeAllRanges();s.addRange(r);output.insertAdjacentText('beforeend','\nPrompt select ho gaya—Copy chuno.');}});
+</script></body></html>
