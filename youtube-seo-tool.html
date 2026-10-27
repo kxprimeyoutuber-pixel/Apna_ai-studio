@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YouTube Title, Description & Hashtag Generator | Apna AI Studio</title>
+<meta name="description" content="Free Hindi YouTube title, description, caption and hashtag idea generator for Shorts and long videos. No API key required.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://kxprimeyoutuber-pixel.github.io/Apna_ai-studio/youtube-seo-tool.html">
+<style>
+:root{color-scheme:dark;--bg:#140609;--panel:#291016;--line:#65303b;--text:#fff5f6;--muted:#d2bfc3;--accent:#ff5266}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#45111f,#140609 55%);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.6}main{max-width:850px;margin:auto;padding:22px 15px 48px}a{color:#ff9ba8}.top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.top a{padding:8px 12px;border:1px solid var(--line);border-radius:10px;text-decoration:none}.hero,.panel{border:1px solid var(--line);border-radius:20px;background:#211017;padding:22px;margin:16px 0}.eyebrow{color:#ff9ba8;font-size:12px;font-weight:800;letter-spacing:1px}.hero h1{font-size:clamp(28px,6vw,42px);line-height:1.15;margin:10px 0}.muted,small{color:var(--muted)}label{display:block;font-weight:700;margin:14px 0 6px}input,select,textarea{width:100%;padding:13px;border:1px solid var(--line);border-radius:11px;background:#120a0d;color:white;font:inherit}textarea{min-height:110px;resize:vertical}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}button{padding:12px 15px;border:0;border-radius:11px;background:var(--accent);color:white;font-weight:800;font:inherit;cursor:pointer;margin:8px 7px 0 0}.secondary{background:#43202a;border:1px solid var(--line)}.result{white-space:pre-wrap;overflow-wrap:anywhere;background:#120a0d;border:1px solid var(--line);padding:14px;border-radius:12px;min-height:56px}.result h3{margin-top:0}.note{font-size:13px;color:var(--muted)}@media(max-width:560px){.grid{grid-template-columns:1fr}.hero,.panel{padding:16px}}
+</style></head>
+<body><main>
+<div class="top"><a href="index.html">← Apna AI Studio</a><a href="photo-maker.html">🖼️ Photo Maker</a></div>
+<section class="hero"><span class="eyebrow">FREE CREATOR TOOL</span><h1>🎬 YouTube Title, Description & Hashtag Generator</h1><p class="muted">Apne video topic se Hindi/Hinglish title ideas, description, caption aur relevant hashtag ideas taiyar karein.</p></section>
+<section class="panel"><h2>Apne video ki details bharein</h2>
+<label for="topic">Video ka topic / song / subject *</label><input id="topic" maxlength="180" placeholder="Jaise: Tu Jo Juda Ho Gayi - sad status" required>
+<div class="grid"><div><label for="kind">Video type</label><select id="kind"><option value="shorts">YouTube Shorts</option><option value="long">Long Video</option><option value="music">Song / Ringtone</option><option value="gaming">Gaming</option><option value="vlog">Vlog</option></select></div><div><label for="mood">Style</label><select id="mood"><option value="emotional">Sad / Emotional</option><option value="attitude">Attitude</option><option value="romantic">Romantic</option><option value="fun">Funny / Entertaining</option><option value="informative">Informative</option></select></div></div>
+<label for="keywords">Extra keywords (optional)</label><input id="keywords" maxlength="180" placeholder="Jaise: heartbreak, status, Hindi song">
+<button id="generate">✨ Ideas Generate Karein</button><button class="secondary" id="clear" type="button">Clear</button>
+<p class="note">Yeh free template-based idea generator hai; real-time AI model nahi. Results ko apne video ke actual content ke hisaab se edit karein. Views ya viral hone ki guarantee nahi hai.</p>
+</section>
+<section class="panel"><h2>1. Title ideas</h2><div class="result" id="titles" aria-live="polite">Aapke title ideas yahan aayenge.</div><button class="secondary" data-copy="titles">📋 Titles Copy</button></section>
+<section class="panel"><h2>2. Description</h2><div class="result" id="description">Aapki description yahan aayegi.</div><button class="secondary" data-copy="description">📋 Description Copy</button></section>
+<section class="panel"><h2>3. Caption ideas</h2><div class="result" id="caption">Caption yahan aayega.</div><button class="secondary" data-copy="caption">📋 Caption Copy</button></section>
+<section class="panel"><h2>4. Hashtag ideas</h2><div class="result" id="hashtags">Hashtags yahan aayenge.</div><button class="secondary" data-copy="hashtags">📋 Hashtags Copy</button></section>
+<section class="panel"><h2>SEO tips</h2><ul><li>Title mein video ka asli topic aur relevant keyword rakhein.</li><li>Description ko video ke content se match karein; misleading claims na karein.</li><li>Sirf relevant hashtags use karein; bahut zyada hashtags bharne se bachein.</li><li>Copyrighted song/video use karne se pehle rights aur platform rules check karein.</li></ul></section>
+<footer class="note">© Apna AI Studio · Free creator helper. Generated ideas are suggestions, not a guarantee of ranking or views.</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+function make(){
+ const topic=$('topic').value.trim(); if(!topic){$('topic').focus();alert('Pehle video ka topic likhein.');return;}
+ const kind=$('kind').value,mood=$('mood').value,extra=$('keywords').value.trim();
+ const type=kind==='shorts'?'YouTube Shorts':kind==='long'?'YouTube Video':kind==='music'?'Song & Ringtone':'';
+ const moods={emotional:['Dil Ko Chhoo Jane Wala','Heart Touching Status','Emotional Moments'],attitude:['Powerful Attitude','Swag Status','Full Confidence'],romantic:['Romantic Vibes','Pyar Bhare Lamhe','Love Status'],fun:['Funny Moments','Must Watch','Entertainment Time'],informative:['Complete Guide','Easy Explanation','Useful Tips']};
+ const tags={emotional:['SadStatus','HeartBroken','EmotionalStatus','HindiSadSong'],attitude:['AttitudeStatus','Swag','DesiVibes'],romantic:['LoveStatus','RomanticSong','LoveVibes'],fun:['FunnyVideo','Entertainment','Comedy'],informative:['HindiTips','HowTo','LearnWithMe']};
+ const suffix=moods[mood], titles=[topic+' | '+suffix[0]+' 💔',topic+' 🔥 | '+suffix[1],suffix[2]+' ❤️ | '+topic];
+ if(kind==='shorts')titles.push(topic+' #Shorts');
+ if(kind==='gaming')titles.push(topic+' | Gaming Highlights 🎮');
+ if(kind==='vlog')titles.push(topic+' | Hindi Vlog');
+ $('titles').textContent=titles.map((t,i)=>(i+1)+'. '+t).join('\n');
+ $('description').textContent=topic+'\n\n'+(kind==='shorts'?'Is short video ko dekhein aur apni rai comments mein batayein!':kind==='music'?'Is song/ringtone video ko sunein. Pasand aaye to like aur comment karein.':'Is video mein '+topic+' se judi content/jaankari share ki gayi hai. Video dekhein aur apni rai comments mein batayein.')+'\n\n'+(extra?'Related keywords: '+extra+'\n\n':'')+'Aise hi videos ke liye channel ko subscribe karein.\n\n#'+(kind==='shorts'?'Shorts #YouTubeShorts ':'YouTube ')+tags[mood].map(x=>'#'+x).join(' ')+' #ApnaAIStudio';
+ $('caption').textContent=['💔 '+topic+' — kuch ehsaas lafzon mein nahi hote…','✨ '+topic+' | Aapko kaisa laga? Comment mein batayein!','❤️ '+topic+' ko us dost ke saath share karein jise yeh pasand aaye.'].join('\n\n');
+ const custom=extra.toLowerCase().split(/[ ,]+/).filter(Boolean).map(x=>x.replace(/[^\p{L}\p{N}_]/gu,'')).filter(Boolean).slice(0,8);
+ const all=['YouTube',...(kind==='shorts'?['Shorts','YouTubeShorts']:[]),...tags[mood],...custom,'ApnaAIStudio'];
+ $('hashtags').textContent=[...new Set(all)].map(x=>'#'+x).join(' ');
+}
+$('generate').addEventListener('click',make);
+$('clear').addEventListener('click',()=>{['topic','keywords'].forEach(id=>$(id).value='');['titles','description','caption','hashtags'].forEach(id=>$(id).textContent='Yahan result aayega.');$('topic').focus();});
+document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('click',async()=>{const text=$($(btn).dataset.copy).textContent;try{await navigator.clipboard.writeText(text);btn.textContent='✅ Copied!';setTimeout(()=>btn.textContent='📋 Copy',1400);}catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();btn.textContent='✅ Copied!';}}));
+</script></body></html>
